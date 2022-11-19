@@ -1,140 +1,172 @@
 <?php
 
-    namespace APP\Models;
+namespace App\Models;
 
-    use MF\Model\Model;
+use MF\Model\Model;
 
-    class Usuario extends Model {
-        private $id;
-        private $nome;
-        private $email;
-        private $senha;
+class Usuario extends Model {
 
-        public function __get($atributo) {
-            return $this->$atributo;
-        }
+	private $id;
+	private $nome;
+	private $email;
+	private $senha;
 
-        public function __set($atributo, $valor) {
-            $this->$atributo = $valor;
-        }
+	public function __get($atributo) {
+		return $this->$atributo;
+	}
 
-        //salvar
-        public function salvar() {
-            $query = "INSERT INTO tc_usuarios(nome, email, senha)VALUES(:nome, :email, :senha)";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':nome', $this->__get('nome'));
-            $stmt->bindValue(':email', $this->__get('email'));
-            $stmt->bindValue(':senha', $this->__get('senha'));
-            $stmt->execute();
+	public function __set($atributo, $valor) {
+		$this->$atributo = $valor;
+	}
 
-            return $this;
-        }
+	//salvar
+	public function salvar() {
 
-        //validar se o cadastro pode ser feito
-        public function validarCadastro() {
-            $valido = true;
+		$query = "insert into usuarios(nome, email, senha)values(:nome, :email, :senha)";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':nome', $this->__get('nome'));
+		$stmt->bindValue(':email', $this->__get('email'));
+		$stmt->bindValue(':senha', $this->__get('senha')); //md5() -> hash 32 caracteres
+		$stmt->execute();
 
-            if (strlen($this->__get('nome')) < 3) {
-                $valido = false;
-            }
+		return $this;
+	}
 
-            if (strlen($this->__get('email')) < 3) {
-                $valido = false;
-            }
+	//validar se um cadastro pode ser feito
+	public function validarCadastro() {
+		$valido = true;
 
-            if (strlen($this->__get('senha')) < 3) {
-                $valido = false;
-            }
+		if(strlen($this->__get('nome')) < 3) {
+			$valido = false;
+		}
 
-            return $valido;
-        }
+		if(strlen($this->__get('email')) < 3) {
+			$valido = false;
+		}
 
-        //recuperar um usuario por e-mail
-        public function getUserEmail() {
-            $query = "SELECT nome, email FROM tc_usuarios WHERE email = :email";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':email', $this->__get('email'));
-            $stmt->execute();
-
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        }
-
-        //autenticar
-        public function autenticar() {
-            $query = "SELECT id, nome, email FROM tc_usuarios WHERE email = :email AND senha = :senha";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':email', $this->__get('email'));
-            $stmt->bindValue(':senha', $this->__get('senha'));
-
-            $stmt->execute();
-
-            $usuario = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-            if ($usuario['id'] != '' & $usuario['nome'] != '') {
-                $this->__set('id', $usuario['id']);
-                $this->__set('nome', $usuario['nome']);
-            }
-
-            return $this;
-        }
-
-        //recuperar
-        public function getAll() {
-            $query = "SELECT u.id, u.nome, u.email, (
-                SELECT count(*) FROM tc_usuarios_seguidores as us WHERE us.id_usuario = :id_usuario AND us.id_usuario_seguindo = u.id
-            ) as seguindo_sn FROM tc_usuarios as u WHERE u.nome LIKE :nome AND u.id != :id_usuario";
-
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':nome', '%' . $this->__get('nome') . '%');
-            $stmt->bindValue(':id_usuario', $this->__get('id'));
-            $stmt->execute();
-
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        }
-
-        //info user
-        public function getInfoUsuario() {
-            $query = "SELECT nome FROM tc_usuarios WHERE id = :id_usuario";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':id_usuario', $this->__get('id'));
-            $stmt->execute();
-
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-
-        // qtde tweets
-        public function getTotalTweets() {
-            $query = "SELECT count(*) as total_tweets FROM tc_tweets WHERE id_usuario = :id_usuario";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':id_usuario', $this->__get('id'));
-            $stmt->execute();
-
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-
-        // qtde seguindo
-        public function getTotalSeguindo() {
-            $query = "SELECT count(*) as total_seguindo FROM tc_usuarios_seguidores WHERE id_usuario = :id_usuario";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':id_usuario', $this->__get('id'));
-            $stmt->execute();
-
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-
-        //qtde seguidores
-        public function getTotalSeguidores() {
-            $query = "SELECT count(*) as total_seguidores FROM tc_usuarios_seguidores WHERE id_usuario_seguindo = :id_usuario";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindValue(':id_usuario', $this->__get('id'));
-            $stmt->execute();
-
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
+		if(strlen($this->__get('senha')) < 3) {
+			$valido = false;
+		}
 
 
+		return $valido;
+	}
 
-    }
+	//recuperar um usuário por e-mail
+	public function getUsuarioPorEmail() {
+		$query = "select nome, email from usuarios where email = :email";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':email', $this->__get('email'));
+		$stmt->execute();
 
+		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+	}
+
+	public function autenticar() {
+
+		$query = "select id, nome, email from usuarios where email = :email and senha = :senha";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':email', $this->__get('email'));
+		$stmt->bindValue(':senha', $this->__get('senha'));
+		$stmt->execute();
+
+		$usuario = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+		if($usuario['id'] != '' && $usuario['nome'] != '') {
+			$this->__set('id', $usuario['id']);
+			$this->__set('nome', $usuario['nome']);
+		}
+
+		return $this;
+	}
+
+	public function getAll() {
+		$query = "
+			select 
+				u.id, 
+				u.nome, 
+				u.email,
+				(
+					select
+						count(*)
+					from
+						usuarios_seguidores as us 
+					where
+						us.id_usuario = :id_usuario and us.id_usuario_seguindo = u.id
+				) as seguindo_sn
+			from  
+				usuarios as u
+			where 
+				u.nome like :nome and u.id != :id_usuario
+			";
+
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':nome', '%'.$this->__get('nome').'%');
+		$stmt->bindValue(':id_usuario', $this->__get('id'));
+		$stmt->execute();
+
+		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+	}
+
+	public function seguirUsuario($id_usuario_seguindo) {
+		$query = "insert into usuarios_seguidores(id_usuario, id_usuario_seguindo)values(:id_usuario, :id_usuario_seguindo)";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':id_usuario', $this->__get('id'));
+		$stmt->bindValue(':id_usuario_seguindo', $id_usuario_seguindo);
+		$stmt->execute();
+
+		return true;
+	}
+
+	public function deixarSeguirUsuario($id_usuario_seguindo) {
+		$query = "delete from usuarios_seguidores where id_usuario = :id_usuario and id_usuario_seguindo = :id_usuario_seguindo";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':id_usuario', $this->__get('id'));
+		$stmt->bindValue(':id_usuario_seguindo', $id_usuario_seguindo);
+		$stmt->execute();
+
+		return true;
+	}
+
+	//Informações do Usuário
+	public function getInfoUsuario() {
+		$query = "select nome from usuarios where id = :id_usuario";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':id_usuario', $this->__get('id'));
+		$stmt->execute();
+
+		return $stmt->fetch(\PDO::FETCH_ASSOC);
+	}
+
+	//Total de tweets
+	public function getTotalTweets() {
+		$query = "select count(*) as total_tweet from tweets where id_usuario = :id_usuario";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':id_usuario', $this->__get('id'));
+		$stmt->execute();
+
+		return $stmt->fetch(\PDO::FETCH_ASSOC);
+	}
+
+	//Total de usuários que estamos seguindo
+	public function getTotalSeguindo() {
+		$query = "select count(*) as total_seguindo from usuarios_seguidores where id_usuario = :id_usuario";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':id_usuario', $this->__get('id'));
+		$stmt->execute();
+
+		return $stmt->fetch(\PDO::FETCH_ASSOC);
+	}
+
+	//Total de seguidores
+	public function getTotalSeguidores() {
+		$query = "select count(*) as total_seguidores from usuarios_seguidores where id_usuario_seguindo = :id_usuario";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindValue(':id_usuario', $this->__get('id'));
+		$stmt->execute();
+
+		return $stmt->fetch(\PDO::FETCH_ASSOC);
+	}
+}
 
 ?>

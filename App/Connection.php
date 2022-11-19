@@ -1,25 +1,24 @@
 <?php
 
-    namespace App;
+namespace App;
 
-    class Connection {
+class Connection {
 
-        public static function getDb() {
-            try {
+	public static function getDb() {
+		try {
 
-                $conn = new \PDO(
-                    "mysql:host=localhost;dbname=devthiagosilva;charset=utf8",
-                    "sa",
-                    "M@sterkey"
-                );
+			$conn = new \PDO(
+				"mysql:host=localhost;dbname=u476578909_twitter;charset=utf8",
+				"u476578909_thiago_twitter",
+				"Jahlion011@" 
+			);
 
-                return $conn;
+			return $conn;
 
-            } catch (\PDOException $e) {
-                //.. tratativas ..//
-                echo $e->getMessage();
-            }
-        }
-    }
+		} catch (\PDOException $e) {
+			//.. tratar de alguma forma ..//
+		}
+	}
+}
 
 ?>

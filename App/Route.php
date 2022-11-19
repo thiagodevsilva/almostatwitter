@@ -1,79 +1,70 @@
-<?php 
+<?php
 
-    namespace App;
+namespace App;
 
-    use MF\Init\Bootstrap;
+use MF\Init\Bootstrap;
 
-    class Route extends Bootstrap {
+class Route extends Bootstrap {
 
-        protected function initRoutes() {
+	protected function initRoutes() {
 
-            $routes['home'] = array(
-                'route' => '/',
-                'controller' => 'indexController',
-                'action' => 'index'
-            );
-            
-            $routes['inscreverse'] = array(
-                'route' => '/inscreverse',
-                'controller' => 'indexController',
-                'action' => 'inscreverse'
-            );
+		$routes['home'] = array(
+			'route' => '/',
+			'controller' => 'indexController',
+			'action' => 'index'
+		);
 
-            $routes['registrar'] = array(
-                'route' => '/registrar',
-                'controller' => 'indexController',
-                'action' => 'registrar'
-            );
+		$routes['inscreverse'] = array(
+			'route' => '/inscreverse',
+			'controller' => 'indexController',
+			'action' => 'inscreverse'
+		);
 
-            $routes['autenticar'] = array(
-                'route' => '/autenticar',
-                'controller' => 'AuthController',
-                'action' => 'autenticar'
-            );
+		$routes['registrar'] = array(
+			'route' => '/registrar',
+			'controller' => 'indexController',
+			'action' => 'registrar'
+		);
 
-            $routes['timeline'] = array(
-                'route' => '/timeline',
-                'controller' => 'AppController',
-                'action' => 'timeline'
-            );
+		$routes['autenticar'] = array(
+			'route' => '/autenticar',
+			'controller' => 'AuthController',
+			'action' => 'autenticar'
+		);
 
-            $routes['sair'] = array(
-                'route' => '/sair',
-                'controller' => 'AuthController',
-                'action' => 'sair'
-            );
+		$routes['timeline'] = array(
+			'route' => '/timeline',
+			'controller' => 'AppController',
+			'action' => 'timeline'
+		);
 
-            $routes['tweet'] = array(
-                'route' => '/tweet',
-                'controller' => 'AppController',
-                'action' => 'tweet'
-            );
+		$routes['sair'] = array(
+			'route' => '/sair',
+			'controller' => 'AuthController',
+			'action' => 'sair'
+		);
 
-            $routes['quem_seguir'] = array(
-                'route' => '/quem_seguir',
-                'controller' => 'AppController',
-                'action' => 'quemSeguir'
-            );
+		$routes['tweet'] = array(
+			'route' => '/tweet',
+			'controller' => 'AppController',
+			'action' => 'tweet'
+		);
 
-            $routes['acao'] = array(
-                'route' => '/acao',
-                'controller' => 'AppController',
-                'action' => 'acao'
-            );
+		$routes['quem_seguir'] = array(
+			'route' => '/quem_seguir',
+			'controller' => 'AppController',
+			'action' => 'quemSeguir'
+		);
 
-            $routes['remover_tweet'] = array(
-                'route' => '/remover_tweet',
-                'controller' => 'AppController',
-                'action' => 'removerTweet'
-            );
+		$routes['acao'] = array(
+			'route' => '/acao',
+			'controller' => 'AppController',
+			'action' => 'acao'
+		);
 
-            $this->setRoutes($routes);
-        }
+		$this->setRoutes($routes);
+	}
 
-        
-
-        
-    }
+}
 
 ?>

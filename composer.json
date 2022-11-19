@@ -1,19 +1,18 @@
 {
-    "nome": "miniframework",
-    "require": {
-        "php": ">= 7.0"
-    },
-    "authors": [
-        {
-            "name": "Thiago Silva",
-            "email": "email@email.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "App\\": "App/",
-            "MF\\": "vendor/MF/"
-        }
-    }
-
+	"name": "miniframework",
+	"require": {
+		"php": ">= 7.0"
+	},
+	"authors": [
+		{
+			"name": "Jorge Sant Ana",
+			"email": "jorge@teste.com.br"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"App\\": "App/",
+			"MF\\": "vendor/MF/"
+		}
+	}
 }
